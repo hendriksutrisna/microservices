@@ -62,7 +62,7 @@ Required setup:
 public class AuditAwareImpl implements AuditorAware<String> {
   @Override
   public Optional<String> getCurrentAuditor() {
-  return Optional.of("SYSTEM"); // Or fetch logged-in user
+    return Optional.of("SYSTEM"); // Or fetch logged-in user
   }
 }
 ```
@@ -86,7 +86,7 @@ public abstract class BaseEntity {
 3. Enable in main application
 ```java
 @SpringBootApplication
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
 public class AccountsApplication { ... }
 ```
 
