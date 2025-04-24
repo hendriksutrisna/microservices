@@ -1,10 +1,10 @@
-package com.eazybytes.loans.controller;
+package com.eazybytes.cards.controller;
 
-import com.eazybytes.loans.constants.LoansConstants;
-import com.eazybytes.loans.dto.ErrorResponseDto;
-import com.eazybytes.loans.dto.LoansDto;
-import com.eazybytes.loans.dto.ResponseDto;
-import com.eazybytes.loans.service.LoansService;
+import com.eazybytes.cards.constants.CardsConstants;
+import com.eazybytes.cards.dto.CardsDto;
+import com.eazybytes.cards.dto.ErrorResponseDto;
+import com.eazybytes.cards.dto.ResponseDto;
+import com.eazybytes.cards.service.CardsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,20 +21,19 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(
-        name = "CRUD REST APIs for Loans in EazyBank",
-        description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE loan details"
+        name = "CRUD REST APIs for Cards in EazyBank",
+        description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE card details"
 )
 @RestController
-@RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
 @Validated
-public class LoansController {
-
-    private LoansService loansService;
+public class CardsController {
+    private CardsService cardsService;
 
     @Operation(
-            summary = "Create Loan REST API",
-            description = "REST API to create new loan inside EazyBank"
+            summary = "Create Card REST API",
+            description = "REST API to create new Card inside EazyBank"
     )
     @ApiResponses({
             @ApiResponse(
@@ -50,16 +49,16 @@ public class LoansController {
             )
     })
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createLoan(@RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber) {
-        loansService.createLoan(mobileNumber);
+    public ResponseEntity<ResponseDto> createCard(@Valid @RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber) {
+        cardsService.createCard(mobileNumber);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ResponseDto(LoansConstants.STATUS_201, LoansConstants.MESSAGE_201));
+                .body(new ResponseDto(CardsConstants.STATUS_201, CardsConstants.MESSAGE_201));
     }
 
     @Operation(
-            summary = "Fetch Loan Details REST API",
-            description = "REST API to fetch loan details based on a mobile number"
+            summary = "Fetch Card Details REST API",
+            description = "REST API to fetch card details based on a mobile number"
     )
     @ApiResponses({
             @ApiResponse(
@@ -75,16 +74,16 @@ public class LoansController {
             )
     })
     @GetMapping("/fetch")
-    public ResponseEntity<LoansDto> fetchLoan(@RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber) {
-        LoansDto loansDto = loansService.fetchLoan(mobileNumber);
+    public ResponseEntity<CardsDto> fetchCard(@Valid @RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber) {
+        CardsDto cardsDto = cardsService.fetchCard(mobileNumber);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(loansDto);
+                .body(cardsDto);
     }
 
     @Operation(
-            summary = "Update Loan Details REST API",
-            description = "REST API to update loan details based on a loan number"
+            summary = "Update Card Details REST API",
+            description = "REST API to update card details based on a card number"
     )
     @ApiResponses({
             @ApiResponse(
@@ -104,22 +103,22 @@ public class LoansController {
             )
     })
     @PutMapping("/update")
-    public ResponseEntity<ResponseDto> updateLoan(@Valid @RequestBody LoansDto loansDto) {
-        boolean isUpdated = loansService.updateLoan(loansDto);
-        if(isUpdated) {
+    public ResponseEntity<ResponseDto> updateCard(@Valid @RequestBody CardsDto cardsDto) {
+        boolean isUpdated = cardsService.updateCard(cardsDto);
+        if (isUpdated) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+                    .body(new ResponseDto(CardsConstants.STATUS_200, CardsConstants.MESSAGE_200));
         } else {
             return ResponseEntity
-                    .status(HttpStatus.EXPECTATION_FAILED)
-                    .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_UPDATE));
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDto(CardsConstants.STATUS_417, CardsConstants.MESSAGE_417_UPDATE));
         }
     }
 
     @Operation(
-            summary = "Delete Loan Details REST API",
-            description = "REST API to delete Loan details based on a mobile number"
+            summary = "Delete Card Details REST API",
+            description = "REST API to delete Card details based on a mobile number"
     )
     @ApiResponses({
             @ApiResponse(
@@ -139,16 +138,16 @@ public class LoansController {
             )
     })
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteLoan(@RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber) {
-        boolean isDeleted = loansService.deleteLoan(mobileNumber);
-        if(isDeleted) {
+    public ResponseEntity<ResponseDto> deleteCard(@Valid @RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber) {
+        boolean isDeleted = cardsService.deleteCard(mobileNumber);
+        if (isDeleted) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+                    .body(new ResponseDto(CardsConstants.STATUS_200, CardsConstants.MESSAGE_200));
         } else {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDto(LoansConstants.STATUS_500, LoansConstants.MESSAGE_500));
+                    .body(new ResponseDto(CardsConstants.STATUS_417, CardsConstants.MESSAGE_417_DELETE));
         }
     }
 }
